@@ -1,0 +1,31 @@
+name: Build flatpak bundle
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-5.15
+      options: --privileged
+    steps:
+      - uses: actions/checkout@v2
+      - name: building flatpak bundle
+        uses: bilelmoussaoui/flatpak-github-actions/flatpak-builder@v3
+        with:
+          bundle: com.usebottles.bottles.flatpak
+          manifest-path: com.usebottles.bottles.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          #tag_name: latest
+          files: com.usebottles.bottles.flatpak
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
