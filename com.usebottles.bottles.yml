@@ -79,6 +79,8 @@ cleanup-commands:
   - mkdir -p /app/utils
 
 modules:
+  - com.usebottles.bottles.gstreamer.yaml
+  
   # PYPI modules
   # ----------------------------------------------------------------------------
   - com.usebottles.bottles.pypi-deps.yaml
